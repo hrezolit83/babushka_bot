@@ -12,11 +12,10 @@ if (!BOT_TOKEN) {
 
 const bot = new Telegraf(BOT_TOKEN);
 
-// ✅ Підключення session middleware
 bot.use(session());
 
 bot.start((ctx) => {
-  ctx.session = {}; // очищення попередніх сесій
+  ctx.session = {};
   ctx.reply(
     'Привіт! Обери, що тебе цікавить:',
     Markup.keyboard([['🌦 Погода', '📈 Акції NASDAQ']]).resize(),

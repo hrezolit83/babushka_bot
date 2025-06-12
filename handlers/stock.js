@@ -1,14 +1,18 @@
-import axios from 'axios';
+import { getStockPriceByCompany } from '../services/stocksapi.js';
 
-export async function handleStock(ctx, userInput, userId, n8nBaseUrl) {
+export async function handleStock(ctx, userInput) {
   try {
-    const res = await axios.post(`${n8nBaseUrl}/webhook/get-stock`, {
-      input_text: userInput,
-      username: userId,
-    });
-    return res.data.message || '⚠️ Не вдалося отримати інформацію про акції.';
-  } catch (err) {
-    console.error('❌ Stock API error:', err.message);
-    return '⚠️ Помилка при зверненні до сервісу акцій.';
+    await ctx.reply('🔍 Шукаю інформацію про акції...');
+
+    const { ticker, price } = await getStockPriceByCompany(userInput);
+
+    await ctx.reply(
+      `Ціна акцій ${ticker} зараз становить $${price.toFixed(2)}.`,
+    );
+  } catch (error) {
+    console.error('❌ Помилка у stock handler:', error.message);
+    await ctx.reply(
+      'Виникла помилка при отриманні ціни акцій. Спробуй ще раз.',
+    );
   }
 }
