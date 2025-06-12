@@ -1,0 +1,26 @@
+{
+  "name": "babushka_bot",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "bot.js",
+  "scripts": {
+    "lint": "eslint src/**/*.js",
+    "start": "node ./bot.js",
+    "dev": "nodemon bot.js"
+  },
+  "keywords": [],
+  "author": "Vitaliy Dyedukh <deduh83@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "eslint": "^9.28.0",
+    "globals": "^16.2.0",
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "axios": "^1.9.0",
+    "dotenv": "^16.5.0",
+    "telegraf": "^4.16.3"
+  }
+}
