@@ -1,5 +1,6 @@
 import express from 'express';
 import { getEnvVar } from './utils/getEnvVar';
+import './bot.js';
 
 const app = express();
 const PORT = getEnvVar('PORT', '3000');
