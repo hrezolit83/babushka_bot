@@ -56,7 +56,7 @@ async function getStockPriceByTicker(ticker) {
       throw new Error('Помилка отримання ціни акції');
     }
 
-    return response.data.c; // поточна ціна
+    return response.data.c;
   } catch (error) {
     console.error('❌ Помилка в getStockPriceByTicker:', error.message);
     throw new Error('Помилка отримання ціни акції');

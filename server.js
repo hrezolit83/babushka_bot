@@ -15,7 +15,7 @@ const isLocal = getEnvVar('IS_LOCAL');
 app.use(express.json());
 
 if (!isLocal) {
-  // 🔗 Режим Render/Webhook
+  // 🔗 Режим для Render.com/Webhook
   app.use(bot.webhookCallback('/telegraf'));
 
   app.listen(PORT, async () => {
@@ -25,7 +25,7 @@ if (!isLocal) {
     console.log(`✅ Встановлено webhook: ${webhookUrl}`);
   });
 } else {
-  // 🖥️ Локальний polling
+  // 🖥️ Локальний polling режим
   bot.launch();
   console.log('✅ Бот запущено локально через polling');
 
