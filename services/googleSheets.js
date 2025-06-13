@@ -11,7 +11,8 @@ async function authorize() {
   if (sheetsClient) return sheetsClient;
 
   const credentials = JSON.parse(
-    await readFile('/etc/secrets/google-credentials.json', 'utf-8'),
+    // await readFile('/etc/secrets/google-credentials.json', 'utf-8'),
+    await readFile('google-credentials.json', 'utf-8'),
   );
 
   const auth = new google.auth.GoogleAuth({

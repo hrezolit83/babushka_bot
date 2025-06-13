@@ -1,19 +1,25 @@
+import { getCorrectedText } from '../services/openai.js';
 import { getStockPriceByCompany } from '../services/stocksapi.js';
 import { logToSheet } from '../services/googleSheets.js';
 
 export async function handleStock(ctx, userInput) {
   try {
-    await ctx.reply('🔍 Шукаю інформацію про акції...');
+    await ctx.reply('🔍 Перевіряю назву компанії...');
 
-    const { ticker, price } = await getStockPriceByCompany(userInput);
+    // const correctedCompany = await getCorrectedText(userInput, 'компанія');
 
-    await ctx.reply(
-      `Ціна акцій ${ticker} зараз становить $${price.toFixed(2)}.`,
-    );
+    const correctedCompany = userInput;
+
+    await ctx.reply(`Використовую назву компанії: ${correctedCompany}`);
+
+    const { ticker, price } = await getStockPriceByCompany(correctedCompany);
+
+    const message = `📈 Поточна ціна акцій ${correctedCompany} (${ticker}) — $${price}`;
+    await ctx.reply(message);
 
     await logToSheet({
       date: new Date().toISOString(),
-      username: ctx.from.username || ctx.from.first_name || 'Unknown',
+      username: ctx.from?.username || ctx.from?.first_name || 'Невідомо',
       input: userInput,
       mode: 'stock',
       response: message,

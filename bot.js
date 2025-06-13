@@ -4,7 +4,7 @@ import { handleWeather } from './handlers/weather.js';
 import { handleStock } from './handlers/stock.js';
 
 const BOT_TOKEN = getEnvVar('BOT_TOKEN');
-const DOMAIN = getEnvVar('RENDER_EXTERNAL_URL'); // Змінна, яку Render встановлює автоматично
+const DOMAIN = getEnvVar('RENDER_EXTERNAL_URL');
 
 if (!BOT_TOKEN) {
   console.error('❌ BOT_TOKEN не вказано');
@@ -39,8 +39,10 @@ bot.on('text', async (ctx) => {
 
   if (mode === 'weather' && step === 'waitingCity') {
     await handleWeather(ctx, input);
+    ctx.session = {}; // 🔧 очищення сесії
   } else if (mode === 'stocks' && step === 'waitingCompany') {
     await handleStock(ctx, input);
+    ctx.session = {}; // 🔧 очищення сесії
   } else {
     ctx.reply('Будь ласка, обери опцію з меню 🌦 або 📈');
   }

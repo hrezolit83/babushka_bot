@@ -1,31 +1,35 @@
-//Заглушка для render.com
+//Заглушка для Render.com.
+//Даний файл необхідний у якості "костиля", щоб обійти
+//платнй тариф для деплою нашого бота та обійтися безплатним.
+//У реальному продакшені файлу server.js не повинно бути у структурі проекту бота.
 
 import express from 'express';
 import bot from './bot.js';
+import { getEnvVar } from './utils/getEnvVar.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = getEnvVar('PORT' || '3000');
+const domain = getEnvVar('RENDER_EXTERNAL_URL');
+const isLocal = getEnvVar('IS_LOCAL');
 
 app.use(express.json());
 
-// обробка запитів від Telegram
-app.use(bot.webhookCallback('/telegraf'));
+if (!isLocal) {
+  // 🔗 Режим Render/Webhook
+  app.use(bot.webhookCallback('/telegraf'));
 
-// запуск сервера
-app.get('/', (req, res) => {
-  res.send('🤖 Бот працює через Webhook!');
-});
+  app.listen(PORT, async () => {
+    console.log(`🌐 Сервер запущено на порту ${PORT}`);
+    const webhookUrl = `${domain}/telegraf`;
+    await bot.telegram.setWebhook(webhookUrl);
+    console.log(`✅ Встановлено webhook: ${webhookUrl}`);
+  });
+} else {
+  // 🖥️ Локальний polling
+  bot.launch();
+  console.log('✅ Бот запущено локально через polling');
 
-app.listen(PORT, async () => {
-  console.log(`🌐 Сервер запущено на порту ${PORT}`);
-
-  const domain = process.env.RENDER_EXTERNAL_URL;
-  if (!domain) {
-    console.warn('⚠️ RENDER_EXTERNAL_URL не вказано — Webhook не встановлено');
-    return;
-  }
-
-  const webhookUrl = `${domain}/telegraf`;
-  await bot.telegram.setWebhook(webhookUrl);
-  console.log(`✅ Встановлено webhook: ${webhookUrl}`);
-});
+  app.listen(PORT, () => {
+    console.log(`🌐 Сервер запущено локально на порту ${PORT}`);
+  });
+}
