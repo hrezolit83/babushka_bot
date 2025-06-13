@@ -1,6 +1,6 @@
 import { google } from 'googleapis';
 import { readFile } from 'fs/promises';
-import { getEnvVar } from '../utils/getEnvVar';
+import { getEnvVar } from '../utils/getEnvVar.js';
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const SHEET_ID = getEnvVar('SHEET_ID');
@@ -11,8 +11,9 @@ async function authorize() {
   if (sheetsClient) return sheetsClient;
 
   const credentials = JSON.parse(
-    await readFile('google-credentials.json', 'utf-8'),
+    await readFile('/etc/secrets/google-credentials.json', 'utf-8'),
   );
+
   const auth = new google.auth.GoogleAuth({
     credentials,
     scopes: SCOPES,
