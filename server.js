@@ -8,9 +8,9 @@ import bot from './bot.js';
 import { getEnvVar } from './utils/getEnvVar.js';
 
 const app = express();
-const PORT = getEnvVar('PORT' || '3000');
+const PORT = getEnvVar('PORT', '3000');
 const domain = getEnvVar('RENDER_EXTERNAL_URL');
-const isLocal = getEnvVar('IS_LOCAL');
+const isLocal = getEnvVar('IS_LOCAL') === 'true';
 
 app.use(express.json());
 
