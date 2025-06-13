@@ -1,5 +1,6 @@
 import { getCorrectedText } from '../services/openai.js';
 import { getWeatherByCity } from '../services/weatherapi.js';
+import { logToSheet } from '../services/googleSheets.js';
 
 export async function handleWeather(ctx, userInput) {
   try {
@@ -24,6 +25,14 @@ export async function handleWeather(ctx, userInput) {
     }
 
     await ctx.reply(message);
+
+    await logToSheet({
+      date: new Date().toISOString(),
+      username: ctx.from.username || ctx.from.first_name || 'Unknown',
+      input: userInput,
+      mode: 'weather',
+      response: message,
+    });
   } catch (error) {
     console.error('❌ Помилка у weather handler:', error.message);
     await ctx.reply('Виникла помилка при отриманні погоди. Спробуй ще раз.');
